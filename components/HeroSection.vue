@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const publicPath = usePublicPath()
+</script>
+
 <template>
   <section class="hero-section" aria-labelledby="hero-title">
     <div class="hero-section__content">
@@ -15,8 +19,8 @@
       </div>
     </div>
     <div class="hero-section__picture" aria-hidden="true">
-      <img class="hero-section__pattern" src="/images/hero-pattern.png" alt="" />
-      <img class="hero-section__portrait" src="/images/seletkov.png" alt="" />
+      <img class="hero-section__pattern" :src="publicPath('/images/hero-pattern.png')" alt="" />
+      <img class="hero-section__portrait" :src="publicPath('/images/seletkov.png')" alt="" />
     </div>
   </section>
 </template>

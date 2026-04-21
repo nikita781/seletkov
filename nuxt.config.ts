@@ -1,3 +1,6 @@
+const appBaseURL = process.env.NUXT_APP_BASE_URL || '/'
+const withAppBase = (path: string) => `${appBaseURL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
+
 export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
@@ -9,6 +12,7 @@ export default defineNuxtConfig({
   ],
   css: ['~/assets/styles/main.css'],
   app: {
+    baseURL: appBaseURL,
     head: {
       htmlAttrs: {
         lang: 'ru'
@@ -69,12 +73,12 @@ export default defineNuxtConfig({
         {
           rel: 'icon',
           type: 'image/svg+xml',
-          href: '/images/logo-header.svg'
+          href: withAppBase('/images/logo-header.svg')
         },
         {
           rel: 'shortcut icon',
           type: 'image/svg+xml',
-          href: '/images/logo-header.svg'
+          href: withAppBase('/images/logo-header.svg')
         },
         {
           rel: 'preconnect',

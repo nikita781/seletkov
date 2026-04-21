@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const publicPath = usePublicPath()
+
 withDefaults(
   defineProps<{
     label?: string
@@ -33,7 +35,7 @@ defineEmits<{
   >
     <img
       class="book-card__icon"
-      :src="icon === 'presentation' ? '/images/icon-presentation.svg' : '/images/icon-book.svg'"
+      :src="publicPath(icon === 'presentation' ? '/images/icon-presentation.svg' : '/images/icon-book.svg')"
       alt=""
       aria-hidden="true"
     />

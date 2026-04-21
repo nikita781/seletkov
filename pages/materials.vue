@@ -16,6 +16,7 @@ useSeoMeta({
 
 const selectedPdfPath = ref<string | null>(null)
 const selectedPdfTitle = ref('')
+const publicPath = usePublicPath()
 
 const openPdf = (path: string, title: string) => {
   selectedPdfPath.value = path
@@ -77,7 +78,7 @@ const closePdf = () => {
           </div>
           <iframe
             class="pdf-viewer__frame"
-            :src="`${selectedPdfPath}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`"
+            :src="`${publicPath(selectedPdfPath)}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`"
             :title="selectedPdfTitle"
           />
         </div>

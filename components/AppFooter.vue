@@ -1,8 +1,12 @@
+<script setup lang="ts">
+const publicPath = usePublicPath()
+</script>
+
 <template>
   <footer class="site-footer">
     <div class="site-footer__top">
       <NuxtLink class="site-footer__logo" to="/" aria-label="На главную">
-        <img src="/images/logo-footer.svg" alt="ИжГТУ имени М. Т. Калашникова" />
+        <img :src="publicPath('/images/logo-footer.svg')" alt="ИжГТУ имени М. Т. Калашникова" />
       </NuxtLink>
       <nav class="site-footer__menu" aria-label="Навигация в подвале">
         <NuxtLink to="/">Главная страница</NuxtLink>

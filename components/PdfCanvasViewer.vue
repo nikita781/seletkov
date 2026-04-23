@@ -13,7 +13,14 @@ type PdfRenderTask = {
 
 type PdfPage = {
   getViewport: (options: { scale: number }) => PdfViewport
-  render: (options: { canvasContext: CanvasRenderingContext2D; viewport: PdfViewport }) => PdfRenderTask
+  render: (options: {
+    canvasContext: CanvasRenderingContext2D
+    viewport: PdfViewport
+    optionalContentConfigPromise?: Promise<{
+      renderingIntent: number
+      isVisible: (group: unknown) => boolean
+    }>
+  }) => PdfRenderTask
   cleanup?: () => void
 }
 
@@ -37,6 +44,9 @@ type PdfJsModule = {
     cMapPacked?: boolean
     cMapUrl?: string
     standardFontDataUrl?: string
+    disableFontFace?: boolean
+    useSystemFonts?: boolean
+    isOffscreenCanvasSupported?: boolean
   }) => PdfLoadingTask
 }
 
@@ -60,14 +70,62 @@ let activeRenderTask: PdfRenderTask | null = null
 let renderRun = 0
 let loadRun = 0
 let resizeTimer: ReturnType<typeof setTimeout> | null = null
+const PDF_ASSET_VERSION = '20260423'
+const PDF_RENDERING_INTENT = 2
+const MAX_CANVAS_DIMENSION = 4096
+const MAX_CANVAS_PIXELS = 12 * 1024 * 1024
+
+type MapPrototypeWithPolyfills = Map<unknown, unknown> & {
+  getOrInsertComputed?: (key: unknown, callback: (key: unknown) => unknown) => unknown
+  getOrInsert?: (key: unknown, value: unknown) => unknown
+}
+
+const ensureMapPolyfills = () => {
+  const mapPrototype = Map.prototype as MapPrototypeWithPolyfills
+
+  if (!mapPrototype.getOrInsertComputed) {
+    Object.defineProperty(mapPrototype, 'getOrInsertComputed', {
+      value: function (this: Map<unknown, unknown>, key: unknown, callback: (key: unknown) => unknown) {
+        if (this.has(key)) {
+          return this.get(key)
+        }
+
+        const value = callback(key)
+        this.set(key, value)
+        return value
+      },
+      configurable: true,
+      writable: true
+    })
+  }
+
+  if (!mapPrototype.getOrInsert) {
+    Object.defineProperty(mapPrototype, 'getOrInsert', {
+      value: function (this: Map<unknown, unknown>, key: unknown, value: unknown) {
+        if (this.has(key)) {
+          return this.get(key)
+        }
+
+        this.set(key, value)
+        return value
+      },
+      configurable: true,
+      writable: true
+    })
+  }
+}
 
 const loadPdfJs = async () => {
+  ensureMapPolyfills()
+
   if (!pdfJsPromise) {
-    pdfJsPromise = import(/* @vite-ignore */ publicPath('/vendor/pdfjs/pdf.min.mjs')) as Promise<PdfJsModule>
+    pdfJsPromise = import(
+      /* @vite-ignore */ publicPath(`/vendor/pdfjs/pdf.min.mjs?v=${PDF_ASSET_VERSION}`)
+    ) as Promise<PdfJsModule>
   }
 
   const pdfjs = await pdfJsPromise
-  pdfjs.GlobalWorkerOptions.workerSrc = publicPath('/vendor/pdfjs/pdf.worker.min.mjs')
+  pdfjs.GlobalWorkerOptions.workerSrc = publicPath(`/vendor/pdfjs/pdf.worker.min.mjs?v=${PDF_ASSET_VERSION}`)
 
   return pdfjs
 }
@@ -113,9 +171,18 @@ const renderPage = async () => {
     const availableWidth = Math.max(280, stage.clientWidth - 2)
     const cssScale = Math.min(availableWidth / baseViewport.width, 1.75)
     const outputScale = Math.min(window.devicePixelRatio || 1, 2)
-    const renderViewport = page.getViewport({ scale: cssScale * outputScale })
     const cssWidth = Math.floor(baseViewport.width * cssScale)
     const cssHeight = Math.floor(baseViewport.height * cssScale)
+    const scaleLimit = Math.min(
+      MAX_CANVAS_DIMENSION / Math.max(cssWidth, 1),
+      MAX_CANVAS_DIMENSION / Math.max(cssHeight, 1),
+      Math.sqrt(MAX_CANVAS_PIXELS / Math.max(cssWidth * cssHeight, 1))
+    )
+    const renderScale = Math.max(
+      0.75,
+      Math.min(outputScale, Number.isFinite(scaleLimit) ? scaleLimit : outputScale)
+    )
+    const renderViewport = page.getViewport({ scale: cssScale * renderScale })
     const context = canvas.getContext('2d')
 
     if (!context) {
@@ -131,7 +198,11 @@ const renderPage = async () => {
 
     activeRenderTask = page.render({
       canvasContext: context,
-      viewport: renderViewport
+      viewport: renderViewport,
+      optionalContentConfigPromise: Promise.resolve({
+        renderingIntent: PDF_RENDERING_INTENT,
+        isVisible: () => true
+      })
     })
 
     await activeRenderTask.promise
@@ -141,6 +212,7 @@ const renderPage = async () => {
       return
     }
 
+    console.error('PDF render error', error)
     errorMessage.value = 'Не удалось показать страницу документа.'
   } finally {
     if (currentRun === renderRun) {
@@ -174,9 +246,9 @@ const loadDocument = async () => {
 
     loadingTask = pdfjs.getDocument({
       data,
-      cMapPacked: true,
-      cMapUrl: publicPath('/vendor/pdfjs/cmaps/'),
-      standardFontDataUrl: publicPath('/vendor/pdfjs/standard_fonts/')
+      disableFontFace: true,
+      useSystemFonts: true,
+      isOffscreenCanvasSupported: false
     })
 
     const document = await loadingTask.promise
@@ -193,6 +265,7 @@ const loadDocument = async () => {
     await renderPage()
   } catch (error) {
     if (currentRun === loadRun) {
+      console.error('PDF open error', error)
       errorMessage.value = 'Не удалось открыть документ.'
     }
   } finally {

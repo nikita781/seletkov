@@ -1,4 +1,5 @@
-const appBaseURL = process.env.NUXT_APP_BASE_URL || '/'
+const defaultAppBaseURL = process.env.NODE_ENV === 'development' ? '/' : '/seletkov-test/'
+const appBaseURL = process.env.NUXT_APP_BASE_URL || defaultAppBaseURL
 const withAppBase = (path: string) => `${appBaseURL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
 
 export default defineNuxtConfig({

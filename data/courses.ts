@@ -34,7 +34,7 @@ export const email = 's.g.seletkov@gmail.com'
 export const courseTabs: CourseTab[] = [
   {
     id: 'mag',
-    label: 'Магистрантам',
+    label: 'Дисциплина МДИ',
     image: '/images/category-master.png',
     imageType: 'master'
   },
@@ -55,7 +55,7 @@ export const courseTabs: CourseTab[] = [
 export const courses: Course[] = [
   {
     id: 'mag',
-    title: 'Лекции',
+    title: 'Дисциплина МДИ',
     lectures: [
       {
         number: 'Лекция 1',
@@ -142,15 +142,12 @@ export const courses: Course[] = [
         bullets: [
           {
             text: 'познакомимся с историей диссертации,',
-            href: 'https://example.com'
           },
           {
             text: 'нормативами к диссертации и соискателю ученой степени кандидата наук,',
-            href: 'https://example.com'
           },
           {
             text: 'посмотрим, чем можно руководствоваться в трудах над диссертацией.',
-            href: 'https://example.com'
           }
         ],
         bulletTone: 'body'

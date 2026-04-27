@@ -5,7 +5,7 @@ const publicPath = usePublicPath()
 <template>
   <section class="hero-section" aria-labelledby="hero-title">
     <div class="hero-section__content">
-      <h1 id="hero-title">Методология диссертационного исследования</h1>
+      <h1 id="hero-title">Методология диссертационного исследования (МДИ)</h1>
       <div class="hero-section__info">
         <div>
           <p class="hero-section__name">Селетков Сергей Григорьевич</p>

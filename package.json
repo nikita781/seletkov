@@ -6,6 +6,7 @@
     "dev": "nuxt dev --host 0.0.0.0",
     "build": "nuxt build",
     "generate": "nuxt generate",
+    "postgenerate": "node scripts/copy-404.mjs",
     "preview": "nuxt preview"
   },
   "dependencies": {

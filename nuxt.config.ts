@@ -5,6 +5,11 @@ const withAppBase = (path: string) => `${appBaseURL.replace(/\/$/, '')}/${path.r
 export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
+  nitro: {
+    prerender: {
+      routes: ['/404']
+    }
+  },
   components: [
     {
       path: '~/components',

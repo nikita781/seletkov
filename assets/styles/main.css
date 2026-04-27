@@ -171,6 +171,83 @@ svg {
   flex: 0 0 auto;
 }
 
+.error-page__shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-page .site-footer {
+  margin-top: auto;
+}
+
+.not-found {
+  width: var(--content-width);
+  margin: 70px auto 92px;
+}
+
+.not-found__card {
+  position: relative;
+  overflow: hidden;
+  width: min(760px, 100%);
+  min-height: 390px;
+  padding: 58px;
+  border: 1px solid rgba(214, 226, 244, 0.24);
+  border-radius: 44px;
+  background: linear-gradient(135deg, rgba(49, 113, 198, 0.28), rgba(15, 34, 59, 0.96));
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.2);
+}
+
+.not-found__card::after {
+  content: '404';
+  position: absolute;
+  right: -26px;
+  bottom: -44px;
+  color: rgba(214, 226, 244, 0.08);
+  font-family: var(--font-title);
+  font-size: 210px;
+  font-weight: 700;
+  line-height: 0.8;
+  pointer-events: none;
+}
+
+.not-found__content {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+}
+
+.not-found__eyebrow {
+  margin-bottom: 16px;
+  color: var(--color-secondary);
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.not-found h1 {
+  color: var(--color-bg);
+  font-family: var(--font-title);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.not-found__text {
+  margin-top: 20px;
+  color: var(--color-bg);
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+}
+
 .hero-section {
   display: flex;
   align-items: center;
@@ -1195,6 +1272,41 @@ svg {
 }
 
 @media (max-width: 760px) {
+  .not-found {
+    width: var(--content-width);
+    max-width: calc(100% - 40px);
+    margin: 42px auto 64px;
+  }
+
+  .not-found__card {
+    min-height: 0;
+    padding: 36px 24px;
+    border-radius: 32px;
+  }
+
+  .not-found__card::after {
+    font-size: 140px;
+  }
+
+  .not-found__eyebrow {
+    font-size: 18px;
+  }
+
+  .not-found h1 {
+    font-size: 32px;
+  }
+
+  .not-found__text {
+    font-size: 17px;
+  }
+
+  .not-found__actions {
+    flex-direction: column;
+  }
+
+  .not-found__actions .ui-button {
+    width: 100%;
+  }
   :root {
     --page-pad: 20px;
     --content-width: calc(100vw - 40px);

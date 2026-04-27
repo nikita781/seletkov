@@ -26,7 +26,7 @@ useSeoMeta({
         <span id="doc" class="course-switcher__target" aria-hidden="true" />
 
         <div class="course-intro">
-          <h2>Трейлер к курсу «Методология диссертационного исследования»</h2>
+          <h2>Курс «Методология диссертационного исследования»</h2>
           <nav class="course-tabs" aria-label="Категории курса">
             <CategoryBanner
               v-for="tab in courseTabs"

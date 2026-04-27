@@ -153,7 +153,8 @@ svg {
 .site-header__email span,
 .site-footer__email span,
 .copy-email span,
-.ui-button span {
+.ui-button span,
+.hero-trailer-link span {
   min-width: 0;
   overflow-wrap: break-word;
 }
@@ -218,6 +219,34 @@ svg {
   font-weight: 400;
   line-height: 24px;
   overflow-wrap: break-word;
+}
+
+.hero-trailer-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 14px 22px;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-family: var(--font-text);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  transition: background-color 0.18s ease;
+}
+
+.hero-trailer-link:hover {
+  background: var(--color-primary-dark);
+}
+
+.hero-trailer-link__icon {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) invert(1);
 }
 
 .hero-section__picture {
@@ -1252,6 +1281,7 @@ svg {
   }
 
   .ui-button,
+  .hero-trailer-link,
   .copy-email--primary,
   .copy-email--secondary {
     min-width: 0;
@@ -1443,6 +1473,16 @@ svg {
 }
 
 @media (max-width: 420px) {
+  .hero-trailer-link {
+    padding-inline: 18px;
+    font-size: 16px;
+  }
+
+  .hero-trailer-link__icon {
+    width: 20px;
+    height: 20px;
+  }
+
   .hero-section h1 {
     font-size: 30px;
   }

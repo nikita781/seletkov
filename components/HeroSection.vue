@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const publicPath = usePublicPath()
+const trailerUrl = 'https://rutube.ru/video/486e0f7c27957d2459750da4c59c9a8a/'
 </script>
 
 <template>
@@ -15,7 +16,10 @@ const publicPath = usePublicPath()
             Специалист по методологии научного (диссертационного) исследования
           </p>
         </div>
-        <CopyEmailButton />
+        <a class="hero-trailer-link" :href="trailerUrl" target="_blank" rel="noopener noreferrer">
+          <img class="hero-trailer-link__icon" :src="publicPath('/images/icon-presentation.svg')" alt="" />
+          <span>Посмотреть трейлер к курсу</span>
+        </a>
       </div>
     </div>
     <div class="hero-section__picture" aria-hidden="true">

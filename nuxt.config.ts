@@ -1,6 +1,9 @@
+import { fileURLToPath } from 'node:url'
+
 const defaultAppBaseURL = process.env.NODE_ENV === 'development' ? '/' : '/seletkov-test/'
 const appBaseURL = process.env.NUXT_APP_BASE_URL || defaultAppBaseURL
 const withAppBase = (path: string) => `${appBaseURL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
+const appManifestMockPath = fileURLToPath(new URL('./node_modules/unenv/dist/runtime/mock/empty.mjs', import.meta.url))
 
 export default defineNuxtConfig({
   ssr: true,
@@ -8,6 +11,22 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ['/404']
+    }
+  },
+  hooks: {
+    'vite:extendConfig'(config, { isClient }) {
+      if (!isClient) {
+        return
+      }
+
+      config.resolve ||= {}
+      config.resolve.alias ||= {}
+
+      if (Array.isArray(config.resolve.alias)) {
+        config.resolve.alias.push({ find: '#app-manifest', replacement: appManifestMockPath })
+      } else {
+        config.resolve.alias['#app-manifest'] = appManifestMockPath
+      }
     }
   },
   components: [

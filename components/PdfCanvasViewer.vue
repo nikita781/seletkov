@@ -70,7 +70,7 @@ let activeRenderTask: PdfRenderTask | null = null
 let renderRun = 0
 let loadRun = 0
 let resizeTimer: ReturnType<typeof setTimeout> | null = null
-const PDF_ASSET_VERSION = '20260423'
+const PDF_ASSET_VERSION = '20260429'
 const PDF_RENDERING_INTENT = 2
 const MAX_CANVAS_DIMENSION = 4096
 const MAX_CANVAS_PIXELS = 12 * 1024 * 1024
@@ -120,12 +120,12 @@ const loadPdfJs = async () => {
 
   if (!pdfJsPromise) {
     pdfJsPromise = import(
-      /* @vite-ignore */ publicPath(`/vendor/pdfjs/pdf.min.mjs?v=${PDF_ASSET_VERSION}`)
+      /* @vite-ignore */ publicPath(`/vendor/pdfjs/pdf.min.js?v=${PDF_ASSET_VERSION}`)
     ) as Promise<PdfJsModule>
   }
 
   const pdfjs = await pdfJsPromise
-  pdfjs.GlobalWorkerOptions.workerSrc = publicPath(`/vendor/pdfjs/pdf.worker.min.mjs?v=${PDF_ASSET_VERSION}`)
+  pdfjs.GlobalWorkerOptions.workerSrc = publicPath(`/vendor/pdfjs/pdf.worker.min.js?v=${PDF_ASSET_VERSION}`)
 
   return pdfjs
 }
